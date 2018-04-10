@@ -1,4 +1,4 @@
-# setcalc
+# y.setcalc
 
 >  A Max external to perform musical set theory calculations.
 
