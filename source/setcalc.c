@@ -1,13 +1,13 @@
 //==============================================================================
 //
 //  @file setcalc.c
-//  @author Yves Candau <ycandau@sfu.ca>
-//  
+//  @author Yves Candau <ycandau@gmail.com>
+//
 //  @brief A Max external to perform musical set theory calculations. It extends
 //  the similar object by Matthew McCabe, with 32 bits and 64 bits version
 //  available for Windows and Mac, and a few additions such as outputting
 //  either Forte or Rahn prime forms, and processing sets of any length.
-//  
+//
 //  This Source Code Form is subject to the terms of the Mozilla Public
 //  License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -48,18 +48,18 @@ typedef struct _setcalc {
 //  Static variables
 //==============================================================================
 
-/*******************************************************************************
-*  Global pointer to the class
-*/
+//******************************************************************************
+//  Global pointer to the class
+//
 static t_class* setcalc_class;
 
-/*******************************************************************************
-*  Static arrays to store the prime forms and zsets
-*
-*  The prime forms can be represented by unique identifiers using
-*  hexadecimals numbers. Pitch 10 is then 'A' and pitch 11 is 'B'.
-*  A 64 bit int, i.e. 16 nybbles, is sufficient for the longest prime forms.
-*/
+//******************************************************************************
+//  Static arrays to store the prime forms and zsets
+//
+//  The prime forms can be represented by unique identifiers using
+//  hexadecimals numbers. Pitch 10 is then 'A' and pitch 11 is 'B'.
+//  A 64 bit int, i.e. 16 nybbles, is sufficient for the longest prime forms.
+//
 static t_uint64 PF1[1] = {
   0x0
 };
@@ -117,8 +117,8 @@ static t_uint64 PF8[29] = {
   0x0124678A, 0x0134578A, 0x0124578A, 0x0134679A, 0x01235679
 };
 
-static t_uint64 PF9[12] =
-{
+static t_uint64 PF9[12] = {
+
   0x012345678, 0x012345679, 0x012345689, 0x012345789, 0x012346789, 0x01234568A,
   0x01234578A, 0x01234678A, 0x01235678A, 0x01234679A, 0x01235679A, 0x01245689A
 };
@@ -140,16 +140,21 @@ static short ZS4[2] = { 15, 29 };
 static short ZS5[6] = { 12, 17, 18, 36, 37, 38 };
 static short ZS6[30] = {
   3, 4, 6, 10, 11, 12, 13, 17, 19, 23, 24, 25, 26, 28, 29, 36, 37, 38, 39, 40,
-  41, 42, 43, 44, 45, 46, 47, 48, 49, 50 };
+  41, 42, 43, 44, 45, 46, 47, 48, 49, 50
+} ;
 
 static t_uint64* primeforms[13] = {
-  NULL,  PF1,  PF2,  PF3, PF4, PF5, PF6, PF7, PF8,  PF9, PF10, PF11, PF12 };
+  NULL,  PF1,  PF2,  PF3, PF4, PF5, PF6, PF7, PF8,  PF9, PF10, PF11, PF12
+} ;
 static short* zsets[13] = {
-  NULL, NULL, NULL, NULL, ZS4, ZS5, ZS6, ZS5, ZS4, NULL, NULL, NULL, NULL };
+  NULL, NULL, NULL, NULL, ZS4, ZS5, ZS6, ZS5, ZS4, NULL, NULL, NULL, NULL
+} ;
 static short primeforms_cnt[13] = {
-  1,    1,    6,   12,  29,  38,  50,  38,  29,   12,    6,    1,    1 };
+  1,    1,    6,   12,  29,  38,  50,  38,  29,   12,    6,    1,    1
+} ;
 static short zsets_cnt[13] = {
-  0,    0,    0,    0,   2,   6,  30,   6,   2,    0,    0,    0,    0 };
+  0,    0,    0,    0,   2,   6,  30,   6,   2,    0,    0,    0,    0
+} ;
 
 //==============================================================================
 //  Function prototypes
@@ -231,8 +236,13 @@ void C74_EXPORT ext_main(void* r) {
 
   t_class* c;
 
-  c = class_new("y.setcalc", (method)setcalc_new, (method)setcalc_free,
-    (long)sizeof(t_setcalc), (method)NULL, A_GIMME, 0);
+  c = class_new(
+    "y.setcalc",
+    (method)setcalc_new,
+    (method)setcalc_free,
+    (long)sizeof(t_setcalc),
+    (method)NULL,
+    A_GIMME, 0);
 
   class_addmethod(c, (method)setcalc_assist, "assist", A_CANT, 0);
   class_addmethod(c, (method)setcalc_int, "int", A_LONG, 0);
@@ -488,14 +498,14 @@ void setcalc_list(t_setcalc* x, t_symbol* sym, long argc, t_atom* argv) {
   calc_normal_form(set, normalform, length, x->a_prime_type);
   calc_prime_form(normalform, primeform, length, x->a_prime_type);
   calc_icv(primeform, vector, length);
-  forte_sym = calc_forte_number(primeform, length);  
+  forte_sym = calc_forte_number(primeform, length);
 
   // Output the normal form, prime form, interval class vector, and Forte number
   for (short i = 0; i < length; i++) {
     atom_setlong(output + i, normalform[i]);
   }
   outlet_list(x->outl_normal, NULL, length, output);
-  
+
   for (short i = 0; i < length; i++) {
     atom_setlong(output + i, primeform[i]);
   }
@@ -558,7 +568,7 @@ t_bool set_is_less(
   // Compare for left packedness: widths between successive pitch values
   // There are two alternatives:
   // Forte's goes left to right, Rahn's goes right to left
-  for (short i = (1 - type) / 2 * (length - 2); 
+  for (short i = (1 - type) / 2 * (length - 2);
     i != (1 + type) / 2 * (length - 2) + type;
     i += type) {
     width_left = (
