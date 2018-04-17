@@ -21,8 +21,7 @@ See the xcode project in [build/osx-xcode/](build/osx-xcode/).
 
 ### Visual Studio
 
-See the Visual Studio project and solution in [build/win-vs/](build/win-vs/).
-The Max SDK should be placed in the same parent folder as the repository:
+See the Visual Studio project and solution in [build/win-vs/](build/win-vs/). The Max SDK should be placed in the same parent folder as the repository, and its folder renamed to `max-sdk`:
 
 ```
 Packages ──┬── max-sdk
